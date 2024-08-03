@@ -1,0 +1,12 @@
+---
+ - name: test
+   hosts: web
+   vars:
+    name: "Alaguraj"
+   tasks:
+    - name: ansible fact
+      debug:
+       msg: 
+        - "{{ ansible_distribution }}"
+        - "{{ name }}"
+        - "{{ ansible_distribution_major_version }}" 

@@ -1,0 +1,4 @@
+java_version: "java-17-openjdk"
+tommat_version: "10.1.26"
+tom_port: 8080
+tom_install_dir: "/opt/mytomcat"

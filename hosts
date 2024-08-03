@@ -1,0 +1,7 @@
+[web]
+172.31.93.127 ansible_ssh_user=abhi ansible_ssh_pass="Ansible@123"
+#172.31.81.23 ansible_ssh_user=abhi ansible_ssh_pass="Ansible@123"
+[db]
+54.91.187.21 ansible_ssh_user=abhi ansible_ssh_pass="Ansible@123"
+54.91.187.22 ansible_ssh_user=abhi ansible_ssh_pass="Ansible@123"
+

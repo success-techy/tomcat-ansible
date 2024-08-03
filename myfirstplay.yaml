@@ -1,0 +1,33 @@
+---
+ - name: My First Playbook
+   hosts: web
+   become: true
+   tasks:
+    - name: install web Server
+      yum:
+       name: httpd
+       state: latest 
+      when: ansible_distribution == "RedHat"
+    - name: install apache
+      apt:
+       name: apache2
+       state: latest
+      when: ansible_distribution == "Ubuntu"
+    - name: install apache
+      service:
+       name: apache2
+       state: restarted
+      when: ansible_distribution == "Ubuntu"
+    - name: Restart Service
+      service:
+       name: httpd
+       state: restarted
+      when: ansible_distribution == "RedHat"   
+    - name: create file
+      file:
+       dest: /var/www/html/index.html
+       state: touch
+    - name: add line into that file
+      copy:
+       src: index.html
+       dest: /var/www/html/

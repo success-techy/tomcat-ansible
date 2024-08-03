@@ -1,0 +1,62 @@
+---
+ - name: tomcat deployment
+   hosts: web
+   become: true
+   vars_files:
+    - vars/vars.yaml
+   tasks:
+    - name: install java
+      yum:
+       name: "{{ java_version }}"
+       state: present
+      when: ansible_distribution == "RedHat"
+
+    - name: create tomcat working dir
+      file:
+       dest: "{{ tom_install_dir }}"
+       state: directory
+       owner: abhi
+       group: abhi
+       recurse: yes
+       mode: 0755
+      when: ansible_distribution == "RedHat"
+
+    - name: Download the tomcat 
+      get_url:
+       url: "https://dlcdn.apache.org/tomcat/tomcat-10/v{{ tommat_version }}/bin/apache-tomcat-{{ tommat_version }}.tar.gz"
+       dest: "{{ tom_install_dir }}"
+      when: ansible_distribution == "RedHat"
+
+    - name: Extract the tomcat File
+      unarchive:
+       src: "/opt/mytomcat/apache-tomcat-{{ tommat_version }}.tar.gz"
+       dest: "{{ tom_install_dir }}"
+       owner: abhi
+       group: abhi
+       remote_src: yes
+
+    - name: Copying Server XML
+      template:
+       src: templates/server.xml.j2
+       dest: "{{ tom_install_dir }}/apache-tomcat-{{ tommat_version }}/conf/server.xml"
+
+    - name: copy app data
+      copy:
+        src: files/html/
+        dest: "{{ tom_install_dir }}/apache-tomcat-{{ tommat_version }}/webapps/ROOT/"
+      with_fileglob:
+        - files/html/*
+
+    - name: copying service file
+      template:
+       src: templates/tomcat.service.j2
+       dest: /etc/systemd/system/tomcat.service
+
+    - name: Reload
+      systemd:
+       daemon_reload: yes
+
+    - name: start tomcat
+      service:   
+       name: tomcat
+       state: started
